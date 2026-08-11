@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NexGen Signal - Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <span class="logo-icon">⚡</span>
+                    <span class="logo-text">NexGen</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="lang-toggle" class="lang-btn">EN</button>
+                <div class="user-plan" id="user-plan">FREE</div>
+            </div>
+        </header>
+
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="dashboard">
+                <span class="tab-icon">📊</span>
+                <span class="tab-text" data-i18n="dashboard">Dashboard</span>
+            </button>
+            <button class="tab-btn" data-tab="prices">
+                <span class="tab-icon">💰</span>
+                <span class="tab-text" data-i18n="prices">Prices</span>
+            </button>
+            <button class="tab-btn" data-tab="signals">
+                <span class="tab-icon">🎯</span>
+                <span class="tab-text" data-i18n="signals">Signals</span>
+            </button>
+            <button class="tab-btn" data-tab="portfolio">
+                <span class="tab-icon">💼</span>
+                <span class="tab-text" data-i18n="portfolio">Portfolio</span>
+            </button>
+            <button class="tab-btn" data-tab="more">
+                <span class="tab-icon">more_horiz</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-content active">
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card btc">
+                        <div class="stat-header">
+                            <span class="stat-icon">₿</span>
+                            <span class="stat-name">BTC</span>
+                        </div>
+                        <div class="stat-price" id="btc-price">$0</div>
+                        <div class="stat-change" id="btc-change">0%</div>
+                    </div>
+                    <div class="stat-card eth">
+                        <div class="stat-header">
+                            <span class="stat-icon">Ξ</span>
+                            <span class="stat-name">ETH</span>
+                        </div>
+                        <div class="stat-price" id="eth-price">$0</div>
+                        <div class="stat-change" id="eth-change">0%</div>
+                    </div>
+                </div>
+
+                <!-- Gold & Dollar Section -->
+                <div class="section-header">
+                    <h3 data-i18n="market_overview">Market Overview</h3>
+                </div>
+                <div class="market-cards">
+                    <div class="market-card gold">
+                        <div class="market-icon">🥇</div>
+                        <div class="market-info">
+                            <div class="market-name" data-i18n="gold">Gold</div>
+                            <div class="market-price" id="gold-price">$0/oz</div>
+                            <div class="market-price-local" id="gold-price-toman">0 تومان</div>
+                        </div>
+                    </div>
+                    <div class="market-card dollar">
+                        <div class="market-icon">💵</div>
+                        <div class="market-info">
+                            <div class="market-name" data-i18n="usd_rate">USD/IRR</div>
+                            <div class="market-price" id="dollar-price">0 تومان</div>
+                        </div>
+                    </div>
+                    <div class="market-card eur">
+                        <div class="market-icon">💶</div>
+                        <div class="market-info">
+                            <div class="market-name" data-i18n="eur_rate">EUR/IRR</div>
+                            <div class="market-price" id="eur-price">0 تومان</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fear & Greed Index -->
+                <div class="section-header">
+                    <h3 data-i18n="fear_greed">Fear & Greed Index</h3>
+                </div>
+                <div class="fear-greed-card">
+                    <div class="fg-gauge">
+                        <canvas id="fg-chart" width="200" height="120"></canvas>
+                    </div>
+                    <div class="fg-info">
+                        <div class="fg-value" id="fg-value">0</div>
+                        <div class="fg-label" id="fg-label">Neutral</div>
+                        <div class="fg-change" id="fg-change">Yesterday: 0</div>
+                    </div>
+                </div>
+
+                <!-- Mini Chart -->
+                <div class="section-header">
+                    <h3 data-i18n="btc_chart">BTC Price Chart</h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="price-chart"></canvas>
+                </div>
+
+                <!-- News Feed -->
+                <div class="section-header">
+                    <h3 data-i18n="latest_news">Latest News</h3>
+                </div>
+                <div class="news-feed" id="news-feed">
+                    <!-- News items will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Prices Tab -->
+            <section id="prices" class="tab-content">
+                <div class="search-box">
+                    <input type="text" id="search-coin" placeholder="Search coin..." data-i18n-placeholder="search_placeholder">
+                </div>
+                <div class="prices-list" id="prices-list">
+                    <!-- Prices will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Signals Tab -->
+            <section id="signals" class="tab-content">
+                <div class="signals-header">
+                    <h2 data-i18n="trading_signals">Trading Signals</h2>
+                    <div class="signals-count">
+                        <span data-i18n="today_signals">Today's Signals</span>: <span id="signals-count">0</span>/<span id="signals-limit">3</span>
+                    </div>
+                </div>
+                <div class="signals-list" id="signals-list">
+                    <!-- Signals will be loaded here -->
+                </div>
+                <button class="upgrade-btn" id="upgrade-btn" style="display:none;">
+                    <span data-i18n="unlock_unlimited">Unlock Unlimited Signals</span>
+                    <span class="upgrade-price">$15/mo</span>
+                </button>
+            </section>
+
+            <!-- Portfolio Tab -->
+            <section id="portfolio" class="tab-content">
+                <div class="portfolio-header">
+                    <h2 data-i18n="my_portfolio">My Portfolio</h2>
+                    <button class="add-btn" id="add-portfolio-btn">+</button>
+                </div>
+                <div class="portfolio-summary">
+                    <div class="summary-item">
+                        <span data-i18n="total_value">Total Value</span>
+                        <span class="summary-value" id="total-value">$0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span data-i18n="total_pnl">Total P/L</span>
+                        <span class="summary-value" id="total-pnl">$0</span>
+                    </div>
+                </div>
+                <div class="portfolio-list" id="portfolio-list">
+                    <!-- Portfolio items will be loaded here -->
+                </div>
+            </section>
+
+            <!-- More Tab -->
+            <section id="more" class="tab-content">
+                <div class="more-menu">
+                    <a href="#" class="menu-item" id="leaderboard-link">
+                        <span class="menu-icon">🏆</span>
+                        <span data-i18n="leaderboard">Leaderboard</span>
+                    </a>
+                    <a href="#" class="menu-item" id="referral-link">
+                        <span class="menu-icon">🎁</span>
+                        <span data-i18n="referral">Referral Program</span>
+                    </a>
+                    <a href="#" class="menu-item" id="education-link">
+                        <span class="menu-icon">📚</span>
+                        <span data-i18n="education">Education</span>
+                    </a>
+                    <a href="#" class="menu-item" id="alerts-link">
+                        <span class="menu-icon">🔔</span>
+                        <span data-i18n="alerts">Price Alerts</span>
+                    </a>
+                    <a href="#" class="menu-item" id="settings-link">
+                        <span class="menu-icon">⚙️</span>
+                        <span data-i18n="settings">Settings</span>
+                    </a>
+                    <a href="#" class="menu-item" id="support-link">
+                        <span class="menu-icon">💬</span>
+                        <span data-i18n="support">Support</span>
+                    </a>
+                </div>
+
+                <!-- Referral Section -->
+                <div class="referral-section" id="referral-section" style="display:none;">
+                    <h3 data-i18n="invite_friends">Invite Friends & Earn</h3>
+                    <div class="referral-stats">
+                        <div class="ref-stat">
+                            <span class="ref-count" id="ref-count">0</span>
+                            <span data-i18n="referrals">Referrals</span>
+                        </div>
+                        <div class="ref-stat">
+                            <span class="ref-earned" id="ref-earned">$0</span>
+                            <span data-i18n="earned">Earned</span>
+                        </div>
+                    </div>
+                    <div class="referral-link-box">
+                        <input type="text" id="referral-code" readonly value="Loading...">
+                        <button class="copy-btn" id="copy-referral">Copy</button>
+                    </div>
+                    <p class="referral-info" data-i18n="referral_info">Share your link and earn 20% commission on every subscription!</p>
+                </div>
+
+                <!-- Leaderboard Section -->
+                <div class="leaderboard-section" id="leaderboard-section" style="display:none;">
+                    <h3 data-i18n="top_traders">Top Traders This Month</h3>
+                    <div class="leaderboard-list" id="leaderboard-list">
+                        <!-- Leaderboard will be loaded here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modals -->
+        <div class="modal" id="add-portfolio-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 data-i18n="add_holding">Add Holding</h3>
+                    <button class="close-btn" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label data-i18n="symbol">Symbol</label>
+                        <input type="text" id="input-symbol" placeholder="BTC">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="amount">Amount</label>
+                        <input type="number" id="input-amount" placeholder="0.5">
+                    </div>
+                    <div class="form-group">
+                        <label data-i18n="buy_price">Buy Price (USD)</label>
+                        <input type="number" id="input-price" placeholder="45000">
+                    </div>
+                    <button class="submit-btn" id="submit-portfolio" data-i18n="add">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
