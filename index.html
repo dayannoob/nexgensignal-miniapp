@@ -3,263 +3,478 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NexGen Signal - Dashboard</title>
+    <title>NexGen Signal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="app">
+        <!-- Gradient Background -->
+        <div class="bg-gradient"></div>
+        <div class="bg-grid"></div>
+
         <!-- Header -->
         <header class="header">
             <div class="header-left">
                 <div class="logo">
-                    <span class="logo-icon">⚡</span>
-                    <span class="logo-text">NexGen</span>
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="logo-main">NexGen</span>
+                        <span class="logo-sub">Signal</span>
+                    </div>
                 </div>
             </div>
             <div class="header-right">
-                <button id="lang-toggle" class="lang-btn">EN</button>
-                <div class="user-plan" id="user-plan">FREE</div>
+                <button id="lang-toggle" class="lang-btn">
+                    <span class="lang-icon">🌐</span>
+                    <span class="lang-text">EN</span>
+                </button>
+                <div class="user-avatar" id="user-avatar">
+                    <span>👤</span>
+                </div>
             </div>
         </header>
 
-        <!-- Tab Navigation -->
-        <nav class="tab-nav">
-            <button class="tab-btn active" data-tab="dashboard">
-                <span class="tab-icon">📊</span>
-                <span class="tab-text" data-i18n="dashboard">Dashboard</span>
-            </button>
-            <button class="tab-btn" data-tab="prices">
-                <span class="tab-icon">💰</span>
-                <span class="tab-text" data-i18n="prices">Prices</span>
-            </button>
-            <button class="tab-btn" data-tab="signals">
-                <span class="tab-icon">🎯</span>
-                <span class="tab-text" data-i18n="signals">Signals</span>
-            </button>
-            <button class="tab-btn" data-tab="portfolio">
-                <span class="tab-icon">💼</span>
-                <span class="tab-text" data-i18n="portfolio">Portfolio</span>
-            </button>
-            <button class="tab-btn" data-tab="more">
-                <span class="tab-icon">more_horiz</span>
-            </button>
-        </nav>
-
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Dashboard Tab -->
-            <section id="dashboard" class="tab-content active">
-                <!-- Quick Stats -->
-                <div class="quick-stats">
-                    <div class="stat-card btc">
-                        <div class="stat-header">
-                            <span class="stat-icon">₿</span>
-                            <span class="stat-name">BTC</span>
-                        </div>
-                        <div class="stat-price" id="btc-price">$0</div>
-                        <div class="stat-change" id="btc-change">0%</div>
+            <!-- Dashboard Screen -->
+            <section id="screen-dashboard" class="screen active">
+                <!-- Balance Card -->
+                <div class="balance-card">
+                    <div class="balance-header">
+                        <span class="balance-label" data-i18n="total_portfolio">Total Portfolio</span>
+                        <button class="eye-btn" id="toggle-balance">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="stat-card eth">
-                        <div class="stat-header">
-                            <span class="stat-icon">Ξ</span>
-                            <span class="stat-name">ETH</span>
-                        </div>
-                        <div class="stat-price" id="eth-price">$0</div>
-                        <div class="stat-change" id="eth-change">0%</div>
-                    </div>
-                </div>
-
-                <!-- Gold & Dollar Section -->
-                <div class="section-header">
-                    <h3 data-i18n="market_overview">Market Overview</h3>
-                </div>
-                <div class="market-cards">
-                    <div class="market-card gold">
-                        <div class="market-icon">🥇</div>
-                        <div class="market-info">
-                            <div class="market-name" data-i18n="gold">Gold</div>
-                            <div class="market-price" id="gold-price">$0/oz</div>
-                            <div class="market-price-local" id="gold-price-toman">0 تومان</div>
-                        </div>
-                    </div>
-                    <div class="market-card dollar">
-                        <div class="market-icon">💵</div>
-                        <div class="market-info">
-                            <div class="market-name" data-i18n="usd_rate">USD/IRR</div>
-                            <div class="market-price" id="dollar-price">0 تومان</div>
-                        </div>
-                    </div>
-                    <div class="market-card eur">
-                        <div class="market-icon">💶</div>
-                        <div class="market-info">
-                            <div class="market-name" data-i18n="eur_rate">EUR/IRR</div>
-                            <div class="market-price" id="eur-price">0 تومان</div>
-                        </div>
+                    <div class="balance-value" id="total-balance">$24,562.80</div>
+                    <div class="balance-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M7 17l5-5 5 5M7 7l5 5 5-5"/>
+                        </svg>
+                        <span>+5.23% ($1,234.56)</span>
                     </div>
                 </div>
 
-                <!-- Fear & Greed Index -->
-                <div class="section-header">
-                    <h3 data-i18n="fear_greed">Fear & Greed Index</h3>
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="action-btn" data-action="buy">
+                        <div class="action-icon buy">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                        </div>
+                        <span data-i18n="buy">Buy</span>
+                    </button>
+                    <button class="action-btn" data-action="sell">
+                        <div class="action-icon sell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14"/>
+                            </svg>
+                        </div>
+                        <span data-i18n="sell">Sell</span>
+                    </button>
+                    <button class="action-btn" data-action="swap">
+                        <div class="action-icon swap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/>
+                            </svg>
+                        </div>
+                        <span data-i18n="swap">Swap</span>
+                    </button>
+                    <button class="action-btn" data-action="more">
+                        <div class="action-icon more">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                            </svg>
+                        </div>
+                        <span data-i18n="more">More</span>
+                    </button>
                 </div>
-                <div class="fear-greed-card">
-                    <div class="fg-gauge">
-                        <canvas id="fg-chart" width="200" height="120"></canvas>
+
+                <!-- Market Overview -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3 data-i18n="market_overview">Market Overview</h3>
+                        <button class="see-all-btn" data-i18n="see_all">See All</button>
                     </div>
-                    <div class="fg-info">
-                        <div class="fg-value" id="fg-value">0</div>
-                        <div class="fg-label" id="fg-label">Neutral</div>
-                        <div class="fg-change" id="fg-change">Yesterday: 0</div>
+                    <div class="market-scroll">
+                        <div class="market-card gold">
+                            <div class="market-icon">🥇</div>
+                            <div class="market-data">
+                                <div class="market-name" data-i18n="gold">Gold</div>
+                                <div class="market-price" id="gold-price">$2,350</div>
+                            </div>
+                            <div class="market-badge">
+                                <span id="gold-toman">850K تومان</span>
+                            </div>
+                        </div>
+                        <div class="market-card dollar">
+                            <div class="market-icon">💵</div>
+                            <div class="market-data">
+                                <div class="market-name" data-i18n="usd_rate">USD/IRR</div>
+                                <div class="market-price" id="dollar-price">58,000</div>
+                            </div>
+                            <div class="market-badge">
+                                <span>تومان</span>
+                            </div>
+                        </div>
+                        <div class="market-card bitcoin">
+                            <div class="market-icon">₿</div>
+                            <div class="market-data">
+                                <div class="market-name">Bitcoin</div>
+                                <div class="market-price" id="btc-price">$65,432</div>
+                            </div>
+                            <div class="market-badge positive" id="btc-change">+2.34%</div>
+                        </div>
+                        <div class="market-card ethereum">
+                            <div class="market-icon">Ξ</div>
+                            <div class="market-data">
+                                <div class="market-name">Ethereum</div>
+                                <div class="market-price" id="eth-price">$3,456</div>
+                            </div>
+                            <div class="market-badge negative" id="eth-change">-1.23%</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Mini Chart -->
-                <div class="section-header">
-                    <h3 data-i18n="btc_chart">BTC Price Chart</h3>
-                </div>
-                <div class="chart-container">
-                    <canvas id="price-chart"></canvas>
+                <!-- Fear & Greed -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3 data-i18n="fear_greed">Fear & Greed Index</h3>
+                    </div>
+                    <div class="fear-greed-card">
+                        <div class="fg-visual">
+                            <div class="fg-circle">
+                                <svg viewBox="0 0 100 50" class="fg-arc">
+                                    <defs>
+                                        <linearGradient id="fg-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" style="stop-color:#EF4444"/>
+                                            <stop offset="25%" style="stop-color:#F59E0B"/>
+                                            <stop offset="50%" style="stop-color:#6B7280"/>
+                                            <stop offset="75%" style="stop-color:#10B981"/>
+                                            <stop offset="100%" style="stop-color:#00D4FF"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 10 45 A 40 40 0 0 1 90 45" fill="none" stroke="url(#fg-gradient)" stroke-width="8" stroke-linecap="round"/>
+                                </svg>
+                                <div class="fg-needle" id="fg-needle" style="transform: rotate(0deg)"></div>
+                            </div>
+                        </div>
+                        <div class="fg-info">
+                            <div class="fg-value" id="fg-value">72</div>
+                            <div class="fg-label" id="fg-label">Greed</div>
+                            <div class="fg-prev" data-i18n="yesterday">Yesterday: 68</div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- News Feed -->
-                <div class="section-header">
-                    <h3 data-i18n="latest_news">Latest News</h3>
+                <!-- Price Chart -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3 data-i18n="btc_chart">BTC/USDT</h3>
+                        <div class="chart-tabs">
+                            <button class="chart-tab active" data-period="1D">1D</button>
+                            <button class="chart-tab" data-period="1W">1W</button>
+                            <button class="chart-tab" data-period="1M">1M</button>
+                            <button class="chart-tab" data-period="1Y">1Y</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="price-chart"></canvas>
+                    </div>
                 </div>
-                <div class="news-feed" id="news-feed">
-                    <!-- News items will be loaded here -->
+
+                <!-- News -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3 data-i18n="latest_news">Latest News</h3>
+                        <button class="see-all-btn" data-i18n="see_all">See All</button>
+                    </div>
+                    <div class="news-list" id="news-list">
+                        <!-- News loaded dynamically -->
+                    </div>
                 </div>
             </section>
 
-            <!-- Prices Tab -->
-            <section id="prices" class="tab-content">
-                <div class="search-box">
-                    <input type="text" id="search-coin" placeholder="Search coin..." data-i18n-placeholder="search_placeholder">
+            <!-- Markets Screen -->
+            <section id="screen-markets" class="screen">
+                <div class="search-bar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="search-input" placeholder="Search coins..." data-i18n-placeholder="search_placeholder">
                 </div>
-                <div class="prices-list" id="prices-list">
-                    <!-- Prices will be loaded here -->
+
+                <div class="market-tabs">
+                    <button class="market-tab active" data-filter="all">All</button>
+                    <button class="market-tab" data-filter="gainers">Gainers</button>
+                    <button class="market-tab" data-filter="losers">Losers</button>
+                    <button class="market-tab" data-filter="favorites">★ Favorites</button>
+                </div>
+
+                <div class="markets-list" id="markets-list">
+                    <!-- Markets loaded dynamically -->
                 </div>
             </section>
 
-            <!-- Signals Tab -->
-            <section id="signals" class="tab-content">
+            <!-- Signals Screen -->
+            <section id="screen-signals" class="screen">
                 <div class="signals-header">
-                    <h2 data-i18n="trading_signals">Trading Signals</h2>
-                    <div class="signals-count">
-                        <span data-i18n="today_signals">Today's Signals</span>: <span id="signals-count">0</span>/<span id="signals-limit">3</span>
+                    <div class="signals-info">
+                        <h2 data-i18n="trading_signals">Trading Signals</h2>
+                        <p class="signals-subtitle" data-i18n="ai_powered">AI-Powered Analysis</p>
+                    </div>
+                    <div class="signals-counter">
+                        <span class="counter-value" id="signals-used">2</span>
+                        <span class="counter-separator">/</span>
+                        <span class="counter-limit" id="signals-limit">3</span>
+                        <span class="counter-label" data-i18n="today">today</span>
                     </div>
                 </div>
-                <div class="signals-list" id="signals-list">
-                    <!-- Signals will be loaded here -->
+
+                <div class="signals-filters">
+                    <button class="signal-filter active" data-type="all">All</button>
+                    <button class="signal-filter" data-type="buy">Buy</button>
+                    <button class="signal-filter" data-type="sell">Sell</button>
                 </div>
-                <button class="upgrade-btn" id="upgrade-btn" style="display:none;">
-                    <span data-i18n="unlock_unlimited">Unlock Unlimited Signals</span>
-                    <span class="upgrade-price">$15/mo</span>
-                </button>
+
+                <div class="signals-list" id="signals-list">
+                    <!-- Signals loaded dynamically -->
+                </div>
+
+                <div class="upgrade-banner" id="upgrade-banner">
+                    <div class="upgrade-content">
+                        <div class="upgrade-icon">⭐</div>
+                        <div class="upgrade-text">
+                            <h4 data-i18n="upgrade_title">Unlock Pro</h4>
+                            <p data-i18n="upgrade_desc">Unlimited signals, advanced analytics & more</p>
+                        </div>
+                    </div>
+                    <div class="upgrade-price">
+                        <span class="price-value">$15</span>
+                        <span class="price-period">/mo</span>
+                    </div>
+                </div>
             </section>
 
-            <!-- Portfolio Tab -->
-            <section id="portfolio" class="tab-content">
+            <!-- Portfolio Screen -->
+            <section id="screen-portfolio" class="screen">
                 <div class="portfolio-header">
                     <h2 data-i18n="my_portfolio">My Portfolio</h2>
-                    <button class="add-btn" id="add-portfolio-btn">+</button>
+                    <button class="add-btn" id="add-asset-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                    </button>
                 </div>
+
                 <div class="portfolio-summary">
-                    <div class="summary-item">
-                        <span data-i18n="total_value">Total Value</span>
-                        <span class="summary-value" id="total-value">$0</span>
+                    <div class="summary-card">
+                        <span class="summary-label" data-i18n="total_value">Total Value</span>
+                        <span class="summary-value" id="portfolio-value">$24,562.80</span>
                     </div>
-                    <div class="summary-item">
-                        <span data-i18n="total_pnl">Total P/L</span>
-                        <span class="summary-value" id="total-pnl">$0</span>
+                    <div class="summary-card">
+                        <span class="summary-label" data-i18n="total_pnl">Total P/L</span>
+                        <span class="summary-value positive" id="portfolio-pnl">+$1,234.56</span>
                     </div>
                 </div>
+
+                <div class="portfolio-chart-container">
+                    <canvas id="portfolio-chart"></canvas>
+                </div>
+
                 <div class="portfolio-list" id="portfolio-list">
-                    <!-- Portfolio items will be loaded here -->
+                    <!-- Portfolio items loaded dynamically -->
                 </div>
             </section>
 
-            <!-- More Tab -->
-            <section id="more" class="tab-content">
-                <div class="more-menu">
-                    <a href="#" class="menu-item" id="leaderboard-link">
-                        <span class="menu-icon">🏆</span>
-                        <span data-i18n="leaderboard">Leaderboard</span>
+            <!-- Profile Screen -->
+            <section id="screen-profile" class="screen">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <span>👤</span>
+                    </div>
+                    <h2 class="profile-name" id="profile-name">Trader</h2>
+                    <div class="profile-plan" id="profile-plan">FREE</div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">47</span>
+                        <span class="stat-label" data-i18n="trades">Trades</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">68%</span>
+                        <span class="stat-label" data-i18n="win_rate">Win Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">12</span>
+                        <span class="stat-label" data-i18n="referrals">Referrals</span>
+                    </div>
+                </div>
+
+                <div class="profile-menu">
+                    <a href="#" class="menu-item" id="menu-subscription">
+                        <div class="menu-icon">⭐</div>
+                        <div class="menu-content">
+                            <span class="menu-title" data-i18n="subscription">Subscription</span>
+                            <span class="menu-desc" data-i18n="current_plan">Current Plan: Free</span>
+                        </div>
+                        <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                     </a>
-                    <a href="#" class="menu-item" id="referral-link">
-                        <span class="menu-icon">🎁</span>
-                        <span data-i18n="referral">Referral Program</span>
+                    <a href="#" class="menu-item" id="menu-alerts">
+                        <div class="menu-icon">🔔</div>
+                        <div class="menu-content">
+                            <span class="menu-title" data-i18n="price_alerts">Price Alerts</span>
+                            <span class="menu-desc" data-i18n="alerts_active">3 active alerts</span>
+                        </div>
+                        <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                     </a>
-                    <a href="#" class="menu-item" id="education-link">
-                        <span class="menu-icon">📚</span>
-                        <span data-i18n="education">Education</span>
+                    <a href="#" class="menu-item" id="menu-referral">
+                        <div class="menu-icon">🎁</div>
+                        <div class="menu-content">
+                            <span class="menu-title" data-i18n="referral_program">Referral Program</span>
+                            <span class="menu-desc" data-i18n="earn_commission">Earn 20% commission</span>
+                        </div>
+                        <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                     </a>
-                    <a href="#" class="menu-item" id="alerts-link">
-                        <span class="menu-icon">🔔</span>
-                        <span data-i18n="alerts">Price Alerts</span>
+                    <a href="#" class="menu-item" id="menu-settings">
+                        <div class="menu-icon">⚙️</div>
+                        <div class="menu-content">
+                            <span class="menu-title" data-i18n="settings">Settings</span>
+                            <span class="menu-desc" data-i18n="language_notification">Language & Notifications</span>
+                        </div>
+                        <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                     </a>
-                    <a href="#" class="menu-item" id="settings-link">
-                        <span class="menu-icon">⚙️</span>
-                        <span data-i18n="settings">Settings</span>
-                    </a>
-                    <a href="#" class="menu-item" id="support-link">
-                        <span class="menu-icon">💬</span>
-                        <span data-i18n="support">Support</span>
+                    <a href="#" class="menu-item" id="menu-support">
+                        <div class="menu-icon">💬</div>
+                        <div class="menu-content">
+                            <span class="menu-title" data-i18n="support">Support</span>
+                            <span class="menu-desc" data-i18n="help_center">Help Center & FAQ</span>
+                        </div>
+                        <svg class="menu-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
                     </a>
                 </div>
 
-                <!-- Referral Section -->
-                <div class="referral-section" id="referral-section" style="display:none;">
-                    <h3 data-i18n="invite_friends">Invite Friends & Earn</h3>
-                    <div class="referral-stats">
-                        <div class="ref-stat">
-                            <span class="ref-count" id="ref-count">0</span>
-                            <span data-i18n="referrals">Referrals</span>
-                        </div>
-                        <div class="ref-stat">
-                            <span class="ref-earned" id="ref-earned">$0</span>
-                            <span data-i18n="earned">Earned</span>
-                        </div>
+                <div class="referral-card" id="referral-card">
+                    <div class="referral-header">
+                        <span class="referral-icon">🎁</span>
+                        <h4 data-i18n="invite_earn">Invite & Earn</h4>
                     </div>
+                    <p class="referral-desc" data-i18n="referral_desc">Share your link and earn 20% commission on every subscription!</p>
                     <div class="referral-link-box">
-                        <input type="text" id="referral-code" readonly value="Loading...">
-                        <button class="copy-btn" id="copy-referral">Copy</button>
+                        <input type="text" id="referral-link" readonly value="t.me/NexGenSignalBot?start=ref_123456">
+                        <button class="copy-btn" id="copy-referral-btn">Copy</button>
                     </div>
-                    <p class="referral-info" data-i18n="referral_info">Share your link and earn 20% commission on every subscription!</p>
-                </div>
-
-                <!-- Leaderboard Section -->
-                <div class="leaderboard-section" id="leaderboard-section" style="display:none;">
-                    <h3 data-i18n="top_traders">Top Traders This Month</h3>
-                    <div class="leaderboard-list" id="leaderboard-list">
-                        <!-- Leaderboard will be loaded here -->
+                    <div class="referral-stats-row">
+                        <div class="ref-stat">
+                            <span class="ref-stat-value">12</span>
+                            <span class="ref-stat-label" data-i18n="referrals">Referrals</span>
+                        </div>
+                        <div class="ref-stat">
+                            <span class="ref-stat-value">$48</span>
+                            <span class="ref-stat-label" data-i18n="earned">Earned</span>
+                        </div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- Modals -->
-        <div class="modal" id="add-portfolio-modal">
-            <div class="modal-content">
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-screen="dashboard">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    <polyline points="9,22 9,12 15,12 15,22"/>
+                </svg>
+                <span data-i18n="home">Home</span>
+            </button>
+            <button class="nav-btn" data-screen="markets">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                <span data-i18n="markets">Markets</span>
+            </button>
+            <button class="nav-btn" data-screen="signals">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="13,2 3,14 12,14 11,22 21,10 12,10"/>
+                </svg>
+                <span data-i18n="signals">Signals</span>
+            </button>
+            <button class="nav-btn" data-screen="portfolio">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+                </svg>
+                <span data-i18n="portfolio">Portfolio</span>
+            </button>
+            <button class="nav-btn" data-screen="profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span data-i18n="profile">Profile</span>
+            </button>
+        </nav>
+
+        <!-- Add Asset Modal -->
+        <div class="modal" id="add-asset-modal">
+            <div class="modal-overlay"></div>
+            <div class="modal-sheet">
+                <div class="modal-handle"></div>
                 <div class="modal-header">
-                    <h3 data-i18n="add_holding">Add Holding</h3>
-                    <button class="close-btn" id="close-modal">&times;</button>
+                    <h3 data-i18n="add_asset">Add Asset</h3>
+                    <button class="modal-close" id="close-modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label data-i18n="symbol">Symbol</label>
-                        <input type="text" id="input-symbol" placeholder="BTC">
+                    <div class="input-group">
+                        <label data-i18n="select_coin">Select Coin</label>
+                        <div class="select-input" id="coin-select">
+                            <span class="select-placeholder">Choose a coin</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </div>
                     </div>
-                    <div class="form-group">
+                    <div class="input-group">
                         <label data-i18n="amount">Amount</label>
-                        <input type="number" id="input-amount" placeholder="0.5">
+                        <div class="input-with-suffix">
+                            <input type="number" id="input-amount" placeholder="0.00" step="0.0001">
+                            <span class="input-suffix" id="amount-suffix">BTC</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label data-i18n="buy_price">Buy Price (USD)</label>
-                        <input type="number" id="input-price" placeholder="45000">
+                    <div class="input-group">
+                        <label data-i18n="buy_price_usd">Buy Price (USD)</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="input-price" placeholder="0.00" step="0.01">
+                            <span class="input-suffix">USD</span>
+                        </div>
                     </div>
-                    <button class="submit-btn" id="submit-portfolio" data-i18n="add">Add</button>
+                    <button class="submit-btn" id="submit-asset" data-i18n="add_asset_btn">Add Asset</button>
                 </div>
             </div>
         </div>
